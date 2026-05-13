@@ -12,35 +12,35 @@ from typing_extensions import Self
 class ZoneType(str, Enum):
     """Defines the possible zone types a network node can have."""
 
-    normal     = "normal"
+    normal = "normal"
     restricted = "restricted"
-    priority   = "priority"
-    blocked    = "blocked"
+    priority = "priority"
+    blocked = "blocked"
 
 
 class ColorType(str, Enum):
     """Defines valid color labels assignable to a zone."""
 
-    red     = "red"
-    blue    = "blue"
-    yellow  = "yellow"
-    brown   = "brown"
-    white   = "white"
-    green   = "green"
-    gray    = "gray"
-    pink    = "pink"
-    orange  = "orange"
-    cyan    = "cyan"
-    purple  = "purple"
-    maroon  = "maroon"
-    black   = "black"
-    gold    = "gold"
+    red = "red"
+    blue = "blue"
+    yellow = "yellow"
+    brown = "brown"
+    white = "white"
+    green = "green"
+    gray = "gray"
+    pink = "pink"
+    orange = "orange"
+    cyan = "cyan"
+    purple = "purple"
+    maroon = "maroon"
+    black = "black"
+    gold = "gold"
     darkred = "darkred"
-    violet  = "violet"
+    violet = "violet"
     crimson = "crimson"
     rainbow = "rainbow"
     magenta = "magenta"
-    lime    = "lime"
+    lime = "lime"
 
 
 class HubModel(BaseModel):
@@ -80,7 +80,8 @@ class ConnectionModel(BaseModel):
 
     @model_validator(mode='after')
     def check_connection_validity(self) -> Self:
-        """Ensure a connection links two different zones and normalizes order."""
+        """Ensure a connection links two different zones.
+        """
         if self.hub_a == self.hub_b:
             raise ValueError("A connection cannot link a zone to itself.")
         if self.hub_a > self.hub_b:

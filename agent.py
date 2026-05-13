@@ -2,7 +2,7 @@ from typing import List
 
 
 class Agent:
-    """Represents a single routing agent moving through the network simulation."""
+    """Represents a single routing agent moving through the network."""
 
     def __init__(self, agent_id: str, start_hub: str) -> None:
         """Initialize the agent with its ID and starting zone.

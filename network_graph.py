@@ -4,7 +4,7 @@ from map_reader import MapReader
 
 
 class NetworkGraph:
-    """Builds and holds the full zone-connection graph used during the simulation."""
+    """Builds the network graph used during the simulation."""
 
     def __init__(self, reader: MapReader) -> None:
         """Construct the graph from a parsed map.
@@ -20,9 +20,6 @@ class NetworkGraph:
         self.start_name = reader.start
         self.end_name = reader.end
 
-        self.occupancy: Dict[str, int] = {name: 0 for name in self.hubs}
-        self.occupancy[self.start_name] = self.nb_drones
-
         self.link_capacities: Dict[tuple, int] = {}
 
         self.adjacencies: Dict[str, List[HubModel]] = \
@@ -34,7 +31,7 @@ class NetworkGraph:
         self.end_node = self.hubs[self.end_name]
 
     def _build_graph(self) -> None:
-        """Populate adjacency lists and link capacity map from connection definitions."""
+        """Populate adjacency lists and link capacity map."""
         for conn in self.connections:
             a = conn.hub_a
             b = conn.hub_b

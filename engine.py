@@ -63,17 +63,17 @@ class Engine:
                 self.slots.reserve_hub(v, arrival_turn)
 
                 if u != v:
-                    self.slots.reserve_link(u, v, arrival_turn)
+                    # Link is used during the turn(s) of transit.
+                    # For cost=1, transit turn is arrival_turn.
+                    # For cost=2, transit turn is arrival_turn - 1.
+                    is_one = (cost == 1)
+                    transit_turn = arrival_turn if is_one else arrival_turn - 1
+                    self.slots.reserve_link(u, v, int(transit_turn))
 
                 current_t = arrival_turn
 
     def run(self) -> None:
-        """Run the simulation turn by turn until all agents reach the destination.
-
-        Output format per subject:
-            D<ID>-<zone>             normal move
-            D<ID>-<from>-<to>        agent in transit toward restricted zone
-        """
+        """Run the simulation turn by turn until all drones finish."""
         while not all(a.is_finished for a in self.agents):
             self.turn += 1
             turn_moves: list = []
@@ -99,10 +99,10 @@ class Engine:
 
                 # Resolve display colors for current and target hubs
                 current_color = self.graph.get_color_name(agent.current_hub)
-                target_color  = self.graph.get_color_name(target_name)
+                target_color = self.graph.get_color_name(target_name)
 
                 display_current = agent.current_hub
-                display_target  = target_name
+                display_target = target_name
 
                 if current_color:
                     display_current = self.palette.colorize(
@@ -122,26 +122,36 @@ class Engine:
                 else:
                     weight = 1
 
+                agent_color = self.palette.get_agent_color(agent.agent_id)
+                display_id = self.palette.colorize(
+                    agent.agent_id, agent_color
+                )
+
                 if agent.is_in_flight:
                     # Agent is mid-transit toward a restricted zone
                     agent.move_to_next(weight)
-                    turn_moves.append(f"{agent.agent_id}-{display_target}")
+                    turn_moves.append(f"{display_id}-{display_target}")
                 else:
-                    self.graph.occupancy[agent.current_hub] -= 1
-                    self.graph.occupancy[target_name] += 1
-
                     if weight > 1:
                         # Show connection segment for restricted transit
                         turn_moves.append(
-                            f"{agent.agent_id}-"
-                            f"{display_current}-{display_target}"
+                            f"{display_id}-{display_current}-"
+                            f"{display_target}"
                         )
                     else:
                         turn_moves.append(
-                            f"{agent.agent_id}-{display_target}"
+                            f"{display_id}-{display_target}"
                         )
 
                     agent.move_to_next(weight)
 
             if turn_moves:
-                print(" ".join(turn_moves))
+                print(f"Turn {self.turn:2}: " + " ".join(turn_moves))
+
+        print(
+            "\n" + self.palette.colorize(
+                f"✓ All {len(self.agents)} drone(s) delivered "
+                f"in {self.turn} turn(s).",
+                "green"
+            )
+        )

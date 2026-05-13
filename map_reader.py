@@ -6,7 +6,7 @@ from typing import Dict, List, Any
 
 
 class MapReader:
-    """Reads and validates a network map file, extracting all zones and connections."""
+    """Reads and validates a network map file, extracting all zones."""
 
     DRONE_PATTERN = re.compile(r"^nb_drones:\s+(?P<count>[+-]?\d+)$")
 
@@ -108,14 +108,14 @@ class MapReader:
                 if not cleaned or cleaned.startswith('#'):
                     continue
 
-                # ── nb_drones must be first valid line ────────────────────────
+                # ── nb_drones must be first valid line ──────────────────
                 if self.nb_drones is None:
                     match = self.DRONE_PATTERN.match(cleaned)
                     if match:
                         count = int(match.group("count"))
                         if count < 1:
                             raise ValueError(
-                                f"Line {line_num}: 'nb_drones' must be at least 1."
+                                f"Line {line_num}: 'nb_drones' must be >= 1."
                             )
                         self.nb_drones = count
                         continue
@@ -125,7 +125,7 @@ class MapReader:
                             "'nb_drones: <int>'"
                         )
 
-                # ── Hub / zone definitions ─────────────────────────────────────
+                # ── Hub / zone definitions ──────────────────────────────
                 if cleaned.startswith(("hub:", "start_hub:", "end_hub:")):
                     hub_match = self.HUB_PATTERN.match(cleaned)
 
@@ -139,7 +139,7 @@ class MapReader:
 
                     if data['meta'] == "":
                         raise ValueError(
-                            f"Line {line_num}: Empty metadata block is invalid."
+                            f"Line {line_num}: Meta block empty."
                         )
 
                     raw_type = data['type']
@@ -148,14 +148,14 @@ class MapReader:
                     if raw_type == 'start_hub':
                         if self.start:
                             raise ValueError(
-                                f"Line {line_num}: Only one 'start_hub' is allowed."
+                                f"Line {line_num}: Start hub exists."
                             )
                         self.start = data['name']
 
                     if raw_type == 'end_hub':
                         if self.end:
                             raise ValueError(
-                                f"Line {line_num}: Only one 'end_hub' is allowed."
+                                f"Line {line_num}: End hub exists."
                             )
                         self.end = data['name']
 
@@ -177,8 +177,7 @@ class MapReader:
                         if key == 'color':
                             if not value.isalpha():
                                 raise ValueError(
-                                    f"Line {line_num}: Color must be a string, "
-                                    f"got '{value}'."
+                                    f"Line {line_num}: Color must be a string."
                                 )
                         if key == 'zone' and value == 'restricted':
                             meta['cost'] = '2'
@@ -208,7 +207,7 @@ class MapReader:
 
                     continue
 
-                # ── Connection definitions ─────────────────────────────────────
+                # ── Connection definitions ──────────────────────────────
                 if cleaned.startswith("connection:"):
                     conn_match = self.CONN_PATTERN.match(cleaned)
 
@@ -222,7 +221,7 @@ class MapReader:
 
                     if data['meta'] == "":
                         raise ValueError(
-                            f"Line {line_num}: Empty metadata block is invalid."
+                            f"Line {line_num}: Meta block empty."
                         )
 
                     meta = self._parse_metadata(data.pop('meta'), line_num)

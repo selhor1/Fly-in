@@ -6,7 +6,7 @@ from network_graph import NetworkGraph
 
 
 class Pathfinder:
-    """Handles pathfinding across the network using a weighted Dijkstra algorithm."""
+    """Handles pathfinding across the network using weighted Dijkstra."""
 
     @staticmethod
     def dijkstra(
@@ -54,12 +54,7 @@ class Pathfinder:
                 if neighbor.name == current_name:
                     cost: int | float = 1
                 else:
-                    if neighbor.type.value == 'restricted':
-                        cost = 2
-                    elif neighbor.type.value == 'priority':
-                        cost = 0.9
-                    else:
-                        cost = 1
+                    cost = neighbor.cost
 
                 arrival = current_turn + cost
                 safe_turn = math.ceil(arrival)
@@ -87,14 +82,14 @@ class Pathfinder:
         came_from: Dict[tuple, Any],
         final_state: Any
     ) -> List[str] | None:
-        """Rebuild the ordered path from the came_from map and the final state.
+        """Rebuild the ordered path from the parent mapping.
 
         Args:
             came_from: Parent mapping produced by dijkstra().
             final_state: The destination state tuple (name, turn).
 
         Returns:
-            Ordered list of zone names from start to end, or None if unreachable.
+            Ordered list of zone names or None if unreachable.
         """
         if final_state not in came_from:
             return None
