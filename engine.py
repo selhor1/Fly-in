@@ -25,8 +25,9 @@ class Engine:
         self.palette = TerminalPalette()
 
         for i in range(self.nb_drones):
+            max_sim_turns = max(1000, self.nb_drones * 100)
             came_from, final_state = Pathfinder.dijkstra(
-                self.graph, self.slots, start_turn=0
+                self.graph, self.slots, start_turn=0, max_turns=max_sim_turns
             )
             path = Pathfinder.reconstruct_path(came_from, final_state)
 
@@ -122,10 +123,7 @@ class Engine:
                 else:
                     weight = 1
 
-                agent_color = self.palette.get_agent_color(agent.agent_id)
-                display_id = self.palette.colorize(
-                    agent.agent_id, agent_color
-                )
+                display_id = agent.agent_id
 
                 if agent.is_in_flight:
                     # Agent is mid-transit toward a restricted zone
@@ -146,7 +144,7 @@ class Engine:
                     agent.move_to_next(weight)
 
             if turn_moves:
-                print(f"Turn {self.turn:2}: " + " ".join(turn_moves))
+                print(" ".join(turn_moves))
 
         print(
             "\n" + self.palette.colorize(

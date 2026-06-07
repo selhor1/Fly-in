@@ -194,6 +194,14 @@ class MapReader:
 
                     try:
                         new_hub = HubModel.model_validate(data)
+                        
+                        for existing_hub in self.hubs.values():
+                            if existing_hub.x == new_hub.x and existing_hub.y == new_hub.y:
+                                raise ValueError(
+                                    f"Line {line_num}: Duplicate coordinates ({new_hub.x}, {new_hub.y}) "
+                                    f"for zone '{new_hub.name}', already used by '{existing_hub.name}'."
+                                )
+                                
                         self.hubs[new_hub.name] = new_hub
 
                     except ValidationError as e:

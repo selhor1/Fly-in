@@ -26,7 +26,12 @@ class Pathfinder:
         Returns:
             Tuple of (came_from dict, final_state tuple or None).
         """
-        queue: list = [(start_turn, graph.start_name)]
+        end_hub = graph.hubs[graph.end_name]
+        start_dist = math.hypot(
+            graph.hubs[graph.start_name].x - end_hub.x,
+            graph.hubs[graph.start_name].y - end_hub.y
+        )
+        queue: list = [(start_turn, start_dist, graph.start_name)]
         visited: set = set()
         visited.add((graph.start_name, start_turn))
 
@@ -34,7 +39,7 @@ class Pathfinder:
         final_state = None
 
         while queue:
-            current_turn, current_name = heapq.heappop(queue)
+            current_turn, _, current_name = heapq.heappop(queue)
 
             if current_turn > max_turns:
                 break
@@ -73,7 +78,11 @@ class Pathfinder:
                     if state not in visited:
                         visited.add(state)
                         came_from[state] = (current_name, current_turn)
-                        heapq.heappush(queue, (arrival, neighbor.name))
+                        dist = math.hypot(
+                            neighbor.x - end_hub.x,
+                            neighbor.y - end_hub.y
+                        )
+                        heapq.heappush(queue, (arrival, dist, neighbor.name))
 
         return came_from, final_state
 
