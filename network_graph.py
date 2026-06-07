@@ -27,9 +27,6 @@ class NetworkGraph:
 
         self._build_graph()
 
-        self.start_node = self.hubs[self.start_name]
-        self.end_node = self.hubs[self.end_name]
-
     def _build_graph(self) -> None:
         """Populate adjacency lists and link capacity map."""
         for conn in self.connections:
@@ -67,5 +64,5 @@ class NetworkGraph:
         if hub_name in self.hubs:
             color = self.hubs[hub_name].color
             if color is not None:
-                return color.value
+                return color
         return None

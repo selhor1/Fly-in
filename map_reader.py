@@ -175,10 +175,7 @@ class MapReader:
                                 f"Valid keys: {self.valid_hub_meta}"
                             )
                         if key == 'color':
-                            if not value.isalpha():
-                                raise ValueError(
-                                    f"Line {line_num}: Color must be a string."
-                                )
+                            pass
                         if key == 'zone' and value == 'restricted':
                             meta['cost'] = '2'
 
@@ -194,14 +191,17 @@ class MapReader:
 
                     try:
                         new_hub = HubModel.model_validate(data)
-                        
+
                         for existing_hub in self.hubs.values():
-                            if existing_hub.x == new_hub.x and existing_hub.y == new_hub.y:
+                            if (existing_hub.x == new_hub.x and
+                                    existing_hub.y == new_hub.y):
                                 raise ValueError(
-                                    f"Line {line_num}: Duplicate coordinates ({new_hub.x}, {new_hub.y}) "
-                                    f"for zone '{new_hub.name}', already used by '{existing_hub.name}'."
+                                    f"Line {line_num}: Duplicate coordinates "
+                                    f"({new_hub.x}, {new_hub.y}) for zone "
+                                    f"'{new_hub.name}', already used by "
+                                    f"'{existing_hub.name}'."
                                 )
-                                
+
                         self.hubs[new_hub.name] = new_hub
 
                     except ValidationError as e:

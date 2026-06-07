@@ -4,6 +4,13 @@ try:
 except ModuleNotFoundError:
     print("Pydantic is required. Run: make install")
     sys.exit(0)
+
+try:
+    import matplotlib.colors as mcolors
+except ModuleNotFoundError:
+    print("matplotlib is required. Run: pip install matplotlib")
+    sys.exit(0)
+
 from enum import Enum
 from typing import Optional
 from typing_extensions import Self
@@ -18,31 +25,6 @@ class ZoneType(str, Enum):
     blocked = "blocked"
 
 
-class ColorType(str, Enum):
-    """Defines valid color labels assignable to a zone."""
-
-    red = "red"
-    blue = "blue"
-    yellow = "yellow"
-    brown = "brown"
-    white = "white"
-    green = "green"
-    gray = "gray"
-    pink = "pink"
-    orange = "orange"
-    cyan = "cyan"
-    purple = "purple"
-    maroon = "maroon"
-    black = "black"
-    gold = "gold"
-    darkred = "darkred"
-    violet = "violet"
-    crimson = "crimson"
-    rainbow = "rainbow"
-    magenta = "magenta"
-    lime = "lime"
-
-
 class HubModel(BaseModel):
     """Validates and stores a single zone (hub) in the network."""
 
@@ -51,7 +33,7 @@ class HubModel(BaseModel):
     y: int
     type: ZoneType = Field(default=ZoneType.normal)
     max_drones: int = Field(default=1, ge=1)
-    color: Optional[ColorType] = Field(default=None)
+    color: Optional[str] = Field(default=None)
     cost: int = Field(default=1)
 
     @field_validator('name')
@@ -60,6 +42,18 @@ class HubModel(BaseModel):
         """Ensure zone names do not contain dashes or spaces."""
         if '-' in v or ' ' in v:
             raise ValueError('Zone name cannot contain "-" or spaces.')
+        return v
+
+    @field_validator('color')
+    @classmethod
+    def validate_color(cls, v: Optional[str]) -> Optional[str]:
+        """Ensure the color is a valid CSS4 color or 'rainbow'."""
+        if v is not None:
+            v_lower = v.lower()
+            if v_lower != 'rainbow' and v_lower not in mcolors.CSS4_COLORS:
+                raise ValueError(
+                    f'Color "{v}" is not a valid CSS4 color or "rainbow".'
+                )
         return v
 
 

@@ -1,8 +1,8 @@
-nb_drones: 10000
-start_hub: hub 0 0 [color=green]
-end_hub: goal 10 10 [color=yellow]
+nb_drones: 2
+start_hub: hub 0 0 [color=yellow]
+end_hub: goal 10 10 [color=rainbow]
 hub: roof1 3 4 [zone=normal color=red max_drones=2]
-hub: roof2 6 2 [zone=normal color=blue]
+hub: roof2 6 2 [zone=normal color=rainbow]
 connection: hub-roof1 [max_link_capacity=2]
 connection: roof1-roof2
 connection: roof2-goal

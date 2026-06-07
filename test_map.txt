@@ -1,0 +1,4 @@
+nb_drones: 1
+start_hub: A 0 0 [color=invalid_color]
+end_hub: B 1 1 [color=red]
+connection: A-B []
