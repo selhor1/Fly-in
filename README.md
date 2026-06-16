@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by <your-login>.*
+*This project has been created as part of the 42 curriculum by selhor.*
 
 # Fly-in: Autonomous Drone Routing System
 

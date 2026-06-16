@@ -53,12 +53,7 @@ class Engine:
                     cost: int | float = 1
                 else:
                     dest = self.graph.hubs[v]
-                    if dest.type.value == 'restricted':
-                        cost = 2
-                    elif dest.type.value == 'priority':
-                        cost = 0.9
-                    else:
-                        cost = 1
+                    cost = dest.cost
 
                 arrival_turn = math.ceil(current_t + cost)
                 self.slots.reserve_hub(v, arrival_turn)
@@ -115,13 +110,7 @@ class Engine:
                     )
 
                 target_hub = self.graph.hubs[target_name]
-
-                if target_hub.type.value == 'restricted':
-                    weight: int | float = 2
-                elif target_hub.type.value == 'priority':
-                    weight = 0.9
-                else:
-                    weight = 1
+                weight = target_hub.cost
 
                 display_id = agent.agent_id
 

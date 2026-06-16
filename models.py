@@ -34,7 +34,7 @@ class HubModel(BaseModel):
     type: ZoneType = Field(default=ZoneType.normal)
     max_drones: int = Field(default=1, ge=1)
     color: Optional[str] = Field(default=None)
-    cost: int = Field(default=1)
+    cost: float = Field(default=1.0)
 
     @field_validator('name')
     @classmethod
@@ -47,12 +47,12 @@ class HubModel(BaseModel):
     @field_validator('color')
     @classmethod
     def validate_color(cls, v: Optional[str]) -> Optional[str]:
-        """Ensure the color is a valid CSS4 color or 'rainbow'."""
+        """Ensure the color is a valid color or 'rainbow'."""
         if v is not None:
             v_lower = v.lower()
-            if v_lower != 'rainbow' and v_lower not in mcolors.CSS4_COLORS:
+            if v_lower != 'rainbow' and not mcolors.is_color_like(v_lower):
                 raise ValueError(
-                    f'Color "{v}" is not a valid CSS4 color or "rainbow".'
+                    f'Color "{v}" is not a valid color or "rainbow".'
                 )
         return v
 

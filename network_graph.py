@@ -15,8 +15,6 @@ class NetworkGraph:
         self.hubs = reader.hubs
         self.connections = reader.connections
 
-        self.nb_drones = int(reader.nb_drones)
-
         self.start_name = reader.start
         self.end_name = reader.end
 

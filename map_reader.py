@@ -166,9 +166,11 @@ class MapReader:
                         )
 
                     meta = self._parse_metadata(data.pop('meta'), line_num)
-                    meta['cost'] = '1'
+                    has_explicit_cost = 'cost' in meta
+                    if not has_explicit_cost:
+                        meta['cost'] = '1'
 
-                    for key, value in meta.items():
+                    for key, value in list(meta.items()):
                         if key not in self.valid_hub_meta:
                             raise ValueError(
                                 f"Line {line_num}: Unknown meta key '{key}'. "
@@ -176,8 +178,11 @@ class MapReader:
                             )
                         if key == 'color':
                             pass
-                        if key == 'zone' and value == 'restricted':
-                            meta['cost'] = '2'
+                        if key == 'zone' and not has_explicit_cost:
+                            if value == 'restricted':
+                                meta['cost'] = '2'
+                            elif value == 'priority':
+                                meta['cost'] = '0.9'
 
                     data.pop('type')
 
