@@ -182,7 +182,7 @@ class MapReader:
                             if value == 'restricted':
                                 meta['cost'] = '2'
                             elif value == 'priority':
-                                meta['cost'] = '0.9'
+                                meta['cost'] = '1'
 
                     data.pop('type')
 
@@ -216,7 +216,7 @@ class MapReader:
                                 print(f"Line {line_num}:", parts[1].strip())
                             else:
                                 print(f"Line {line_num}:", err['msg'])
-                            sys.exit(0)
+                            sys.exit(1)
 
                     continue
 
@@ -275,10 +275,10 @@ class MapReader:
                                 print(f"Line {line_num}:", parts[1].strip())
                             else:
                                 print(f"Line {line_num}:", err['msg'])
-                            sys.exit(0)
+                            sys.exit(1)
                     except ValueError as e:
                         print(f"Line {line_num}: {e}")
-                        sys.exit(0)
+                        sys.exit(1)
 
                     continue
 

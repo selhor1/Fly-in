@@ -33,7 +33,7 @@ class Engine:
 
             if path is None:
                 print(f"Error: No valid path found for agent D{i + 1}!")
-                sys.exit(0)
+                sys.exit(1)
 
             new_agent = Agent(
                 agent_id=f"D{i + 1}",

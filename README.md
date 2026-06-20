@@ -46,7 +46,7 @@ The core of Fly-in is a **Space-Time Dijkstra** algorithm. Unlike standard pathf
 
 ### Algorithm Strategy
 - **Greedy Scheduling:** Drones are routed one by one. Each drone reserves its entire path in a `SlotManager` before the next drone's path is calculated.
-- **Priority Handling:** Zones marked as `priority` have a slightly lower heuristic cost (0.9), encouraging the pathfinder to utilize them to reduce overall congestion.
+- **Priority Handling:** Zones marked as `priority` have a standard cost of 1 but are preferred by the pathfinder when determining routes of equal length, encouraging the pathfinder to utilize them to reduce overall congestion.
 - **Restricted Transit:** The engine specifically manages 2-turn movements by tracking "in-flight" states, ensuring drones occupy the link during transit turns.
 
 ## Visual Representation

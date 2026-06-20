@@ -38,7 +38,7 @@ class HubModel(BaseModel):
 
     @field_validator('name')
     @classmethod
-    def validate_name(cls, v: str) -> str:
+    def validate_name(_cls, v: str) -> str:
         """Ensure zone names do not contain dashes or spaces."""
         if '-' in v or ' ' in v:
             raise ValueError('Zone name cannot contain "-" or spaces.')
@@ -46,7 +46,7 @@ class HubModel(BaseModel):
 
     @field_validator('color')
     @classmethod
-    def validate_color(cls, v: Optional[str]) -> Optional[str]:
+    def validate_color(_cls, v: Optional[str]) -> Optional[str]:
         """Ensure the color is a valid color or 'rainbow'."""
         if v is not None:
             v_lower = v.lower()
@@ -66,7 +66,7 @@ class ConnectionModel(BaseModel):
 
     @field_validator('hub_a', 'hub_b')
     @classmethod
-    def validate_hub_names(cls, v: str) -> str:
+    def validate_hub_names(_cls, v: str) -> str:
         """Ensure connected zone names do not contain dashes or spaces."""
         if '-' in v or ' ' in v:
             raise ValueError('Zone name cannot contain "-" or spaces.')

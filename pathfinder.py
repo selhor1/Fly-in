@@ -31,7 +31,7 @@ class Pathfinder:
             graph.hubs[graph.start_name].x - end_hub.x,
             graph.hubs[graph.start_name].y - end_hub.y
         )
-        queue: list = [(start_turn, start_dist, graph.start_name)]
+        queue: list = [(start_turn, 1, start_dist, graph.start_name)]
         visited: set = set()
         visited.add((graph.start_name, start_turn))
 
@@ -39,7 +39,7 @@ class Pathfinder:
         final_state = None
 
         while queue:
-            current_turn, _, current_name = heapq.heappop(queue)
+            current_turn, _, _, current_name = heapq.heappop(queue)
 
             if current_turn > max_turns:
                 break
@@ -82,7 +82,13 @@ class Pathfinder:
                             neighbor.x - end_hub.x,
                             neighbor.y - end_hub.y
                         )
-                        heapq.heappush(queue, (arrival, dist, neighbor.name))
+                        priority_flag = (
+                            0 if neighbor.type.value == 'priority' else 1
+                        )
+                        heapq.heappush(
+                            queue,
+                            (arrival, priority_flag, dist, neighbor.name)
+                        )
 
         return came_from, final_state
 
