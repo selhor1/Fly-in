@@ -166,6 +166,12 @@ class MapReader:
                         )
 
                     meta = self._parse_metadata(data.pop('meta'), line_num)
+                    # if raw_type == 'start_hub' and meta['zone'] == 'blocked':
+                    #     raise ValueError(f"Line {line_num}: start cannot be "
+                    #                      "blocked")
+                    # elif raw_type == 'end_hub' and meta['zone'] == 'blocked':
+                    #     raise ValueError(f"Line {line_num}: end cannot be "
+                    #                      "blocked")
                     has_explicit_cost = 'cost' in meta
                     if not has_explicit_cost:
                         meta['cost'] = '1'
@@ -190,7 +196,14 @@ class MapReader:
                         data['type'] = meta.pop('zone')
 
                     data.update(meta)
-
+                    if raw_type == "start_hub":
+                        if data.get('type', "") == "blocked":
+                            raise ValueError(f"Line {line_num}: start cannot"
+                                             " be blocked")
+                    elif raw_type == "end_hub":
+                        if data.get('type', "") == "blocked":
+                            raise ValueError(f"Line {line_num}: end cannot"
+                                             " be blocked")
                     if raw_type in ["start_hub", "end_hub"]:
                         data['max_drones'] = self.nb_drones
 
@@ -262,7 +275,7 @@ class MapReader:
 
                         if new_conn in self.connections:
                             raise ValueError(
-                                f"Line {line_num}: Duplicate connection "
+                                f"Duplicate connection "
                                 f"'{new_conn.hub_a}-{new_conn.hub_b}'."
                             )
 

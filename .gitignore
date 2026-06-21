@@ -1,9 +1,4 @@
 __pycache__/
-*.py[cod]
-*.pyo
 .mypy_cache/
 .env
-drone_env/
-*.egg-info/
-dist/
-build/
+

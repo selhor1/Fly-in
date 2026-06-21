@@ -77,9 +77,12 @@ class Engine:
             for agent in self.agents:
                 agent.reset_turn()
 
-            # Prioritize agents that are further along their route
+            # Prioritize agents that are further along their route,
+            # and within the same step, prioritize those in-flight (arriving)
             for agent in sorted(
-                self.agents, key=lambda x: x.step_index, reverse=True
+                self.agents,
+                key=lambda x: (x.step_index + (1 if x.is_in_flight else 0), x.is_in_flight),
+                reverse=True
             ):
                 if agent.is_finished:
                     continue
@@ -137,7 +140,7 @@ class Engine:
 
         print(
             "\n" + self.palette.colorize(
-                f"✓ All {len(self.agents)} drone(s) delivered "
+                f"{len(self.agents)} drone(s) delivered "
                 f"in {self.turn} turn(s).",
                 "green"
             )
