@@ -3,7 +3,6 @@ from pathfinder import Pathfinder
 from slot_manager import SlotManager
 from palette import TerminalPalette
 from network_graph import NetworkGraph
-import math
 import sys
 
 
@@ -32,7 +31,7 @@ class Engine:
             path = Pathfinder.reconstruct_path(came_from, final_state)
 
             if path is None:
-                print(f"Error: No valid path found for agent D{i + 1}!")
+                print("Error: No path exists between start_hub and end_hub.")
                 sys.exit(1)
 
             new_agent = Agent(
@@ -43,19 +42,19 @@ class Engine:
             self.agents.append(new_agent)
 
             # Pre-register all slot bookings for this agent's path
-            current_t: int | float = 0
+            current_t: int = 0
             for j in range(len(path) - 1):
                 u = path[j]
                 v = path[j + 1]
 
                 # u == v means the agent waits in place
                 if u == v:
-                    cost: int | float = 1
+                    cost: int = 1
                 else:
                     dest = self.graph.hubs[v]
                     cost = dest.cost
 
-                arrival_turn = math.ceil(current_t + cost)
+                arrival_turn = current_t + cost
                 self.slots.reserve_hub(v, arrival_turn)
 
                 if u != v:
@@ -81,7 +80,8 @@ class Engine:
             # and within the same step, prioritize those in-flight (arriving)
             for agent in sorted(
                 self.agents,
-                key=lambda x: (x.step_index + (1 if x.is_in_flight else 0), x.is_in_flight),
+                key=lambda x:
+                (x.step_index + (1 if x.is_in_flight else 0), x.is_in_flight),
                 reverse=True
             ):
                 if agent.is_finished:

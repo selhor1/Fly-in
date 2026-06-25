@@ -34,7 +34,7 @@ class HubModel(BaseModel):
     type: ZoneType = Field(default=ZoneType.normal)
     max_drones: int = Field(default=1, ge=1)
     color: Optional[str] = Field(default=None)
-    cost: float = Field(default=1.0)
+    cost: int = Field(default=1)
 
     @field_validator('name')
     @classmethod

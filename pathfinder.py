@@ -62,15 +62,14 @@ class Pathfinder:
                     cost = neighbor.cost
 
                 arrival = current_turn + cost
-                safe_turn = math.ceil(arrival)
 
-                hub_free = slots.is_hub_available(neighbor, safe_turn)
+                hub_free = slots.is_hub_available(neighbor, arrival)
                 link_cap = graph.get_link_capacity(current_name, neighbor.name)
                 link_free = True
 
                 if neighbor.name != current_name:
                     link_free = slots.is_link_available(
-                        current_name, neighbor.name, link_cap, safe_turn
+                        current_name, neighbor.name, link_cap, arrival
                     )
 
                 if hub_free and link_free:

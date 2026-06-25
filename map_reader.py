@@ -105,7 +105,7 @@ class MapReader:
                 has_content = True
                 cleaned = self._clean_line(raw_line).strip()
 
-                if not cleaned or cleaned.startswith('#'):
+                if not cleaned:
                     continue
 
                 # ── nb_drones must be first valid line ──────────────────
@@ -166,12 +166,6 @@ class MapReader:
                         )
 
                     meta = self._parse_metadata(data.pop('meta'), line_num)
-                    # if raw_type == 'start_hub' and meta['zone'] == 'blocked':
-                    #     raise ValueError(f"Line {line_num}: start cannot be "
-                    #                      "blocked")
-                    # elif raw_type == 'end_hub' and meta['zone'] == 'blocked':
-                    #     raise ValueError(f"Line {line_num}: end cannot be "
-                    #                      "blocked")
                     has_explicit_cost = 'cost' in meta
                     if not has_explicit_cost:
                         meta['cost'] = '1'
