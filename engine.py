@@ -81,8 +81,7 @@ class Engine:
             for agent in sorted(
                 self.agents,
                 key=lambda x:
-                (x.step_index + (1 if x.is_in_flight else 0), x.is_in_flight),
-                reverse=True
+                x.step_index
             ):
                 if agent.is_finished:
                     continue
